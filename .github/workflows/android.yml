@@ -450,7 +450,7 @@ jobs:
           python3 - <<'PYDEP'
           p='android/app/build.gradle'
           s=open(p).read()
-          dep="implementation 'androidx.media3:media3-exoplayer:1.5.1'"
+          dep="implementation 'androidx.media3:media3-exoplayer:1.4.1'"
           if dep not in s:
               s=s.replace('dependencies {', 'dependencies {\n    '+dep, 1)
           open(p,'w').write(s)
