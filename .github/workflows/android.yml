@@ -101,6 +101,7 @@ jobs:
               I.notifyListeners("deleted", o);
             }
             private boolean obs = false;
+            public void emitNativeState(JSObject data) { notifyListeners("nativeState", data); }
             static void emit(String a, long p) {
               if (I == null) return;
               JSObject o = new JSObject();
@@ -241,8 +242,8 @@ jobs:
                 JSArray items = call.getArray("items");
                 int index = call.getInt("index", 0);
                 long position = (long) (double) call.getDouble("position", 0.0);
-                float speed = (float) call.getDouble("speed", 1.0);
-                float volume = (float) call.getDouble("volume", 1.0);
+                float speed = (float) (double) call.getDouble("speed", 1.0);
+                float volume = (float) (double) call.getDouble("volume", 1.0);
                 Intent i = new Intent(getContext(), PlayerService.class).setAction("NATIVE_PLAY_QUEUE");
                 i.putExtra("queue", items == null ? "[]" : items.toString());
                 i.putExtra("index", index); i.putExtra("position", position);
@@ -362,7 +363,7 @@ jobs:
           try { if (BgPlugin.I != null) { org.json.JSONObject o=new org.json.JSONObject(); o.put("index", player.getCurrentMediaItemIndex()); o.put("position",POS); o.put("duration",DUR); o.put("playing",P); o.put("speed",SPD); o.put("title",T); o.put("artist",A);
               if(player.getCurrentMediaItem()!=null && player.getCurrentMediaItem().localConfiguration!=null) o.put("currentUri",player.getCurrentMediaItem().localConfiguration.uri.toString());
               JSONArray qa=new JSONArray(); for(JSONObject item:queue) qa.put(item.optString("uri", "")); o.put("queue",qa);
-              BgPlugin.I.notifyListeners("nativeState", new com.getcapacitor.JSObject(o.toString())); } } catch(Exception e) {}
+              BgPlugin.I.emitNativeState(new com.getcapacitor.JSObject(o.toString())); } } catch(Exception e) {}
           }
           void apply() {
           if (player != null) { P=player.isPlaying(); POS=player.getCurrentPosition(); DUR=player.getDuration()<0?0:player.getDuration(); }
